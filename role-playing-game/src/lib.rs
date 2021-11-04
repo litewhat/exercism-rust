@@ -2,6 +2,8 @@
 // to enable stricter warnings.
 #![allow(unused)]
 
+use std::cmp::min;
+
 pub struct Player {
     pub health: u32,
     pub mana: Option<u32>,
@@ -10,16 +12,18 @@ pub struct Player {
 
 impl Player {
 
+    pub fn new(level: u32) -> Self {
+        Self { 
+            health: 100,
+            mana: if level >= 10 { Some(100) } else { None },
+            level: level
+        }
+    }
+
     pub fn revive(&self) -> Option<Player> {
-        if self.health == 0 {
-            let new_mana = if self.level >= 10 {
-                Some(100)
-            } else {
-                None
-            };
-            Some(Self { health: 100, mana: new_mana, level: self.level })
-        } else {
-            None
+        match self.health {
+            0 => Some(Self::new(self.level)),
+            _ => None
         }
     }
 
@@ -34,11 +38,7 @@ impl Player {
                 }
             },
             None => {
-                if self.health > mana_cost {
-                    self.health -= mana_cost;
-                } else {
-                    self.health = 0;
-                }
+                self.health = self.health - min(self.health, mana_cost);
                 0
             }
         }
