@@ -11,19 +11,18 @@ pub struct Player {
 }
 
 impl Player {
-
     pub fn new(level: u32) -> Self {
-        Self { 
+        Self {
             health: 100,
             mana: if level >= 10 { Some(100) } else { None },
-            level: level
+            level: level,
         }
     }
 
     pub fn revive(&self) -> Option<Player> {
         match self.health {
             0 => Some(Self::new(self.level)),
-            _ => None
+            _ => None,
         }
     }
 
@@ -36,7 +35,7 @@ impl Player {
                     self.mana = Some(value - mana_cost);
                     mana_cost * 2
                 }
-            },
+            }
             None => {
                 self.health = self.health - min(self.health, mana_cost);
                 0
